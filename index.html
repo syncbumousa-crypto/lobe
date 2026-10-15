@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>لُب — LOBE</title>
+<meta name="description" content="لُب">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+<style>
+  /* الخطّ: ملفٌّ واحدٌ بوزنٍ واحد — الشعارُ لا يحتاج أكثر.
+     و‎block‎ لا ‎swap‎: الاسمُ لا يُعرض بخطٍّ آخرَ لحظةً ثمّ يَقفز. */
+  @font-face{
+    font-family:"HT Heliopolis"; font-style:normal; font-weight:800; font-display:block;
+    src:url("fonts/HT-Heliopolis-Heavy.woff2") format("woff2");
+  }
+
+  :root{
+    --bg:#fbfaf9; --ink:#1b1a18; --dim:#a6a29b;
+    /* ارتفاعُ الرمز هو وحدةُ القياس: الاسمُ والفُرجةُ محسوبان عليه في الصندوق
+       نفسِه، فتثبت نسبُ القُفل في كلّ شاشةٍ ولا تُضبط مرّتين. */
+    --h: clamp(74px, 16vmin, 152px);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#121211; --ink:#f0efec; --dim:#55524d; }
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ height:100%; }
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"HT Heliopolis","Segoe UI",system-ui,sans-serif;
+    display:grid; place-items:center; grid-template-rows:1fr auto;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .stage{ display:grid; place-items:center; padding:24px; }
+
+  /* القُفلُ مُصدَّرٌ من مُصمِّم الشعار كما هو: المسارُ أقواسُ دوائرَ حقيقيّة،
+     والاسمُ نصٌّ لا صورة. و‎currentColor‎ يجعل الاثنين يتبعان لون الصفحة. */
+  .lock{
+    height:var(--h); width:auto; max-width:86vw;
+    fill:currentColor; display:block;
+    opacity:0; transition:opacity .45s ease;
+  }
+  body.ready .lock{ opacity:1; }
+  .lock[hidden]{ display:none; }
+
+  /* المبدّل: ساكنٌ في أسفل الصفحة، لا يُزاحم الشعار ولا يختفي عن طالبه */
+  .lang{
+    appearance:none; border:0; background:transparent; cursor:pointer;
+    margin:0 0 26px; padding:8px 14px; border-radius:99px;
+    font-family:inherit; font-weight:800; font-size:12px; letter-spacing:.08em;
+    color:var(--dim); transition:color .18s, background .18s;
+  }
+  .lang:hover,.lang:focus-visible{ color:var(--ink); background:color-mix(in srgb, var(--ink) 7%, transparent); }
+  .lang:focus-visible{ outline:2px solid var(--ink); outline-offset:2px; }
+</style>
+</head>
+<body>
+
+<main class="stage">
+  <!-- العربيّة: الاسمُ يسارَ الرمز. والصندوقُ هو مدى القُفل نفسِه بلا حَشْو. -->
+  <svg class="lock" id="lk-ar" viewBox="-498.5 42.8 668.2 273.9"
+       xmlns="http://www.w3.org/2000/svg" role="img" aria-label="لُب">
+    <path d="M-140.75,148.39 A54.25,54.25 0 1,1 -50.37,91.6 A54.25,54.25 0 0,1 50.38,91.6 A54.25,54.25 0 1,1 140.75,148.39 L0,302 Z"/>
+    <text x="-353.52" y="236.96" font-family="HT Heliopolis" font-size="141.82"
+          font-weight="800" text-anchor="middle"
+          style="font-feature-settings:&#39;swsh&#39; 1">لُب</text>
+  </svg>
+
+  <!-- واللاتينيّة: الاسمُ يمينَه — فيتقدّم الرمزُ في القراءتين كلتيهما -->
+  <svg class="lock" id="lk-en" viewBox="-169.7 42.8 796 273.9" hidden
+       xmlns="http://www.w3.org/2000/svg" role="img" aria-label="LOBE">
+    <path d="M-140.75,148.39 A54.25,54.25 0 1,1 -50.37,91.6 A54.25,54.25 0 0,1 50.38,91.6 A54.25,54.25 0 1,1 140.75,148.39 L0,302 Z"/>
+    <text x="417.41" y="243.84" font-family="HT Heliopolis" font-size="141.82"
+          font-weight="800" text-anchor="middle"
+          style="font-feature-settings:&#39;swsh&#39; 1">LOBE</text>
+  </svg>
+</main>
+
+<button class="lang" id="lang" type="button">EN</button>
+
+<script>
+(function () {
+  'use strict';
+  var KEY = 'lobe-lang';
+  var ar = document.getElementById('lk-ar');
+  var en = document.getElementById('lk-en');
+  var btn = document.getElementById('lang');
+
+  /* ‎hidden‎ خاصّيّةُ عناصر HTML وحدها؛ وضعُها على عنصر SVG يكتب في الكائن
+     ولا يصل إلى السمة، فلا يختفي شيء. فتُكتب السمةُ صراحةً. */
+  function show(el, on) {
+    if (on) el.removeAttribute('hidden'); else el.setAttribute('hidden', '');
+  }
+
+  function set(lang, remember) {
+    var isAr = lang !== 'en';
+    document.documentElement.lang = isAr ? 'ar' : 'en';
+    document.documentElement.dir  = isAr ? 'rtl' : 'ltr';
+    document.title = isAr ? 'لُب — LOBE' : 'LOBE — لُب';
+    show(ar,  isAr);
+    show(en, !isAr);
+    /* الزرُّ يحمل اللغةَ الأخرى: هو وعدٌ بما سيصير، لا وصفٌ لما هو */
+    btn.textContent = isAr ? 'EN' : 'ع';
+    btn.setAttribute('aria-label', isAr ? 'English' : 'العربيّة');
+    if (remember) { try { localStorage.setItem(KEY, isAr ? 'ar' : 'en'); } catch (e) {} }
+  }
+
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  set(saved === 'en' ? 'en' : 'ar', false);
+
+  btn.addEventListener('click', function () {
+    set(document.documentElement.lang === 'ar' ? 'en' : 'ar', true);
+  });
+
+  /* لا يُكشف الشعارُ قبل وصول خطّه، وإلّا رُئي بخطّ النظام لحظةً.
+     والمهلةُ حارسٌ: إن تعذّر الخطُّ لم تبقَ الصفحةُ بيضاءَ أبدًا. */
+  function reveal() { document.body.classList.add('ready'); }
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(reveal, reveal);
+    setTimeout(reveal, 2500);
+  } else { reveal(); }
+})();
+</script>
+</body>
+</html>
