@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>لُب — LOBE</title>
-<meta name="description" content="لُب">
+<meta name="description" content="لُب — شركةٌ تقنيّة. نُعيد الإنسانَ إلى لُبّه، ليصير منتجًا لا مستهلكًا.">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 
 <style>
-  /* الخطّ: ملفٌّ واحدٌ بوزنٍ واحد — الشعارُ لا يحتاج أكثر.
+  /* الخطّ: ملفٌّ واحدٌ بوزنٍ واحد — الاسمُ لا يحتاج أكثر.
      و‎block‎ لا ‎swap‎: الاسمُ لا يُعرض بخطٍّ آخرَ لحظةً ثمّ يَقفز. */
   @font-face{
     font-family:"HT Heliopolis"; font-style:normal; font-weight:800; font-display:block;
@@ -16,110 +16,307 @@
   }
 
   :root{
-    --bg:#fbfaf9; --ink:#1b1a18; --dim:#a6a29b;
-    /* ارتفاعُ الرمز هو وحدةُ القياس: الاسمُ والفُرجةُ محسوبان عليه في الصندوق
-       نفسِه، فتثبت نسبُ القُفل في كلّ شاشةٍ ولا تُضبط مرّتين. */
-    --h: clamp(74px, 16vmin, 152px);
+    --bg:#fbfaf9; --ink:#1b1a18; --dim:#a6a29b; --line:#e7e4df; --soft:#f3f1ee;
+    /* ارتفاعُ الرمز هو وحدةُ القياس: الاسمُ والفُرجةُ محسوبان عليه، فتثبت
+       نسبُ القُفل في كلّ شاشةٍ ولا تُضبط مرّتين. */
+    --h: clamp(64px, 12vmin, 118px);
+    --pad: clamp(22px, 5vw, 64px);
   }
   @media (prefers-color-scheme: dark){
-    :root{ --bg:#121211; --ink:#f0efec; --dim:#55524d; }
+    :root{ --bg:#121211; --ink:#f0efec; --dim:#55524d; --line:#26251f; --soft:#191817; }
   }
 
   *{ box-sizing:border-box; }
-  html,body{ height:100%; }
+  html{ -webkit-text-size-adjust:100%; }
   body{
     margin:0; background:var(--bg); color:var(--ink);
     font-family:"HT Heliopolis","Segoe UI",system-ui,sans-serif;
-    display:grid; place-items:center; grid-template-rows:1fr auto;
-    -webkit-font-smoothing:antialiased;
+    font-weight:800; -webkit-font-smoothing:antialiased;
+    opacity:0; transition:opacity .5s ease;
   }
+  body.ready{ opacity:1; }
 
-  .stage{ display:grid; place-items:center; padding:24px; }
-
-  /* القُفلُ مُصدَّرٌ من مُصمِّم الشعار كما هو: المسارُ أقواسُ دوائرَ حقيقيّة،
-     والاسمُ نصٌّ لا صورة. و‎currentColor‎ يجعل الاثنين يتبعان لون الصفحة. */
+  /* ═══ القُفل: الرمزُ ضوءٌ على لوحةٍ خاصّةٍ به، والاسمُ نصٌّ لا صورة ═══ */
+  .plate{
+    position:relative; overflow:hidden;
+    min-height:min(78vh, 720px);
+    display:grid; place-items:center; padding:var(--pad);
+    /* لوحةٌ لا تنقلب مع المظهر: الضوءُ لا يُعكَس */
+    background:#cfdff0;
+  }
   .lock{
-    height:var(--h); width:auto; max-width:86vw;
-    fill:currentColor; display:block;
-    opacity:0; transition:opacity .45s ease;
+    position:relative; z-index:2;
+    display:flex; align-items:center; gap:calc(var(--h)*0.26);
   }
-  body.ready .lock{ opacity:1; }
-  .lock[hidden]{ display:none; }
+  /* الرمزُ أوّلُ العناصر في الترتيب، فيتقدّم في القراءتين كلتيهما:
+     يمينًا في العربيّة ويسارًا في اللاتينيّة، بلا كودٍ إضافيّ. */
+  .glyph{
+    width:calc(var(--h)*1.95); height:calc(var(--h)*1.95);
+    display:block; flex:0 0 auto;
+  }
+  .wordmark{
+    font-size:calc(var(--h)*0.58); line-height:1; color:#0e1c2b;
+    font-feature-settings:'swsh' 1; white-space:nowrap;
+    text-shadow:0 1px 0 rgba(255,255,255,.35);
+  }
+  .tagline{
+    position:absolute; z-index:2; bottom:calc(var(--pad)*0.9); inset-inline:var(--pad);
+    text-align:center; color:#2a4057; opacity:.62;
+    font-size:clamp(11px,1.5vw,13.5px); letter-spacing:.14em;
+  }
 
-  /* المبدّل: ساكنٌ في أسفل الصفحة، لا يُزاحم الشعار ولا يختفي عن طالبه */
+  /* ═══ المتن ═══ */
+  .wrap{ max-width:980px; margin:0 auto; padding:0 var(--pad); }
+  .lede{
+    padding:clamp(54px,9vh,104px) 0 clamp(40px,7vh,76px);
+    font-size:clamp(19px,3.1vw,31px); line-height:1.72; letter-spacing:-.01em;
+    max-width:24ch;
+  }
+  .lede em{ font-style:normal; color:var(--dim); }
+
+  .rule{ height:1px; background:var(--line); border:0; margin:0; }
+
+  .label{
+    padding:clamp(34px,6vh,58px) 0 clamp(14px,2.4vh,22px);
+    font-size:12px; letter-spacing:.2em; color:var(--dim);
+  }
+  .grid{
+    display:grid; gap:1px; background:var(--line);
+    border-block:1px solid var(--line);
+    grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));
+  }
+  .card{
+    background:var(--bg); padding:clamp(26px,4vw,40px) clamp(22px,3vw,34px);
+    display:flex; flex-direction:column; gap:10px; min-height:clamp(150px,22vh,210px);
+    justify-content:flex-end; transition:background .2s;
+  }
+  .card:hover{ background:var(--soft); }
+  .card .nm{ font-size:clamp(23px,3.4vw,32px); line-height:1.1; }
+  .card .ds{ font-size:clamp(13px,1.9vw,15px); color:var(--dim); line-height:1.6; }
+  .card .ix{ font-size:11px; letter-spacing:.18em; color:var(--dim); margin-bottom:auto; }
+
+  footer{
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    padding:clamp(28px,5vh,46px) var(--pad); max-width:980px; margin:0 auto;
+    font-size:12px; color:var(--dim); letter-spacing:.1em;
+  }
   .lang{
     appearance:none; border:0; background:transparent; cursor:pointer;
-    margin:0 0 26px; padding:8px 14px; border-radius:99px;
+    padding:8px 14px; border-radius:99px; margin:0;
     font-family:inherit; font-weight:800; font-size:12px; letter-spacing:.08em;
     color:var(--dim); transition:color .18s, background .18s;
   }
-  .lang:hover,.lang:focus-visible{ color:var(--ink); background:color-mix(in srgb, var(--ink) 7%, transparent); }
+  .lang:hover,.lang:focus-visible{
+    color:var(--ink); background:color-mix(in srgb, var(--ink) 7%, transparent);
+  }
   .lang:focus-visible{ outline:2px solid var(--ink); outline-offset:2px; }
+
+  [hidden]{ display:none !important; }
+  @media (prefers-reduced-motion:reduce){ body{ transition:none; } }
 </style>
 </head>
 <body>
 
-<main class="stage">
-  <!-- العربيّة: الاسمُ يسارَ الرمز. والصندوقُ هو مدى القُفل نفسِه بلا حَشْو. -->
-  <svg class="lock" id="lk-ar" viewBox="-498.5 42.8 668.2 273.9"
-       xmlns="http://www.w3.org/2000/svg" role="img" aria-label="لُب">
-    <path d="M-140.75,148.39 A54.25,54.25 0 1,1 -50.37,91.6 A54.25,54.25 0 0,1 50.38,91.6 A54.25,54.25 0 1,1 140.75,148.39 L0,302 Z"/>
-    <text x="-353.52" y="236.96" font-family="HT Heliopolis" font-size="141.82"
-          font-weight="800" text-anchor="middle"
-          style="font-feature-settings:&#39;swsh&#39; 1">لُب</text>
-  </svg>
+<main>
+  <section class="plate">
+    <!-- الرمزُ ضوءٌ نافذ: يُرسم على قماشٍ من المسار نفسِه، بلا صورةٍ مستوردة -->
+    <div class="lock">
+      <canvas class="glyph" id="gl" aria-hidden="true"></canvas>
+      <span class="wordmark" id="wm">لُب</span>
+    </div>
+    <p class="tagline" id="tag">شركةٌ تقنيّة</p>
+  </section>
 
-  <!-- واللاتينيّة: الاسمُ يمينَه — فيتقدّم الرمزُ في القراءتين كلتيهما -->
-  <svg class="lock" id="lk-en" viewBox="-169.7 42.8 796 273.9" hidden
-       xmlns="http://www.w3.org/2000/svg" role="img" aria-label="LOBE">
-    <path d="M-140.75,148.39 A54.25,54.25 0 1,1 -50.37,91.6 A54.25,54.25 0 0,1 50.38,91.6 A54.25,54.25 0 1,1 140.75,148.39 L0,302 Z"/>
-    <text x="417.41" y="243.84" font-family="HT Heliopolis" font-size="141.82"
-          font-weight="800" text-anchor="middle"
-          style="font-feature-settings:&#39;swsh&#39; 1">LOBE</text>
-  </svg>
+  <div class="wrap">
+    <p class="lede" id="lede">
+      نُعيد الإنسانَ إلى لُبّه، إلى عقله.
+      <em>ونُعيد صياغةَ علاقته بالتقنية ليصير منتجًا لا مستهلكًا.</em>
+    </p>
+  </div>
+
+  <div class="wrap"><p class="label" id="lab">المنصّات الثلاث</p></div>
+  <div class="grid">
+    <article class="card"><span class="ix">٠١</span>
+      <h2 class="nm" id="p1n">أكاديميا</h2><p class="ds" id="p1d">منصّةُ العلم</p></article>
+    <article class="card"><span class="ix">٠٢</span>
+      <h2 class="nm" id="p2n">أجندا</h2><p class="ds" id="p2d">منصّةُ العمل</p></article>
+    <article class="card"><span class="ix">٠٣</span>
+      <h2 class="nm" id="p3n">أثينا</h2><p class="ds" id="p3d">منصّةُ القراءة</p></article>
+  </div>
 </main>
 
-<button class="lang" id="lang" type="button">EN</button>
+<footer>
+  <span id="cr">لُب</span>
+  <button class="lang" id="lang" type="button">EN</button>
+</footer>
 
 <script>
 (function () {
   'use strict';
-  var KEY = 'lobe-lang';
-  var ar = document.getElementById('lk-ar');
-  var en = document.getElementById('lk-en');
-  var btn = document.getElementById('lang');
 
-  /* ‎hidden‎ خاصّيّةُ عناصر HTML وحدها؛ وضعُها على عنصر SVG يكتب في الكائن
-     ولا يصل إلى السمة، فلا يختفي شيء. فتُكتب السمةُ صراحةً. */
-  function show(el, on) {
-    if (on) el.removeAttribute('hidden'); else el.setAttribute('hidden', '');
+  /* ══ المعلَم: قاعدةٌ مولِّدةٌ لا صورة.
+        ثلاثةُ أقواسٍ بنصف قطرٍ واحدٍ ٥٤٫٢٥، وضلعان مماسّان إلى رأسٍ عند (0,302). ══ */
+  var MARK = 'M-140.75,148.39 A54.25,54.25 0 1,1 -50.37,91.6 '
+           + 'A54.25,54.25 0 0,1 50.38,91.6 A54.25,54.25 0 1,1 140.75,148.39 L0,302 Z';
+
+  var cv = document.getElementById('gl');
+  var ctx = cv.getContext('2d');
+
+  function bbox(d){
+    var ns = 'http://www.w3.org/2000/svg';
+    var sv = document.createElementNS(ns, 'svg');
+    sv.setAttribute('style', 'position:absolute;left:-9999px;width:40px;height:40px');
+    var p = document.createElementNS(ns, 'path');
+    p.setAttribute('d', d);
+    sv.appendChild(p);
+    document.body.appendChild(sv);
+    var b = p.getBBox();
+    sv.remove();
+    return b;
+  }
+  var BB = bbox(MARK);
+  var SIDE = Math.max(BB.width, BB.height);
+
+  function blank(n){ var c = document.createElement('canvas'); c.width = c.height = n; return c; }
+
+  /* قناعُ الشكل: المعلَمُ أبيضَ على شفّاف، بحَشْوٍ يتّسع للوهج */
+  function maskOf(n){
+    var c = blank(n), x = c.getContext('2d');
+    var s = n * 0.62 / SIDE;
+    x.setTransform(s, 0, 0, s, n/2 - s*(BB.x + BB.width/2), n/2 - s*(BB.y + BB.height/2));
+    x.fillStyle = '#fff';
+    x.fill(new Path2D(MARK));
+    return c;
+  }
+  /* حزامُ الحافّة: الشكلُ ناقصَ تآكُلَه. تقاطعُ إزاحاتٍ على محيط دائرة. */
+  function rimOf(n, k){
+    var f = maskOf(n), e = blank(n), ex = e.getContext('2d'), i, a;
+    ex.drawImage(f, 0, 0);
+    ex.globalCompositeOperation = 'destination-in';
+    for (i = 0; i < 20; i++){
+      a = i / 20 * Math.PI * 2;
+      ex.drawImage(f, Math.cos(a)*k, Math.sin(a)*k);
+    }
+    var b = blank(n), bx = b.getContext('2d');
+    bx.drawImage(f, 0, 0);
+    bx.globalCompositeOperation = 'destination-out';
+    bx.drawImage(e, 0, 0);
+    return b;
+  }
+  /* نسخةٌ مصبوغةٌ بلونٍ واحد */
+  function tint(src, n, col){
+    var c = blank(n), x = c.getContext('2d');
+    x.drawImage(src, 0, 0);
+    x.globalCompositeOperation = 'source-in';
+    x.fillStyle = col;
+    x.fillRect(0, 0, n, n);
+    return c;
   }
 
-  function set(lang, remember) {
-    var isAr = lang !== 'en';
+  var N = 0, MASK = null, WARM = null;
+  function build(){
+    var r = cv.getBoundingClientRect();
+    var dpr = Math.min(2, window.devicePixelRatio || 1);
+    var n = Math.max(160, Math.round(r.width * dpr));
+    if (n === N) return;
+    N = n; cv.width = cv.height = n;
+    MASK = maskOf(n);
+    WARM = tint(rimOf(n, n * 0.014), n, '#ff9c80');
+  }
+
+  var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ضوءٌ نافذٌ بلا حدٍّ صلب: القناعُ نفسُه يُرسم مموّهًا بثلاثة أنصافِ أقطار.
+     الأولى هالةٌ تخرج عن الحدّ، والأخيرةُ تُعيد تعريفَ الشكل كيلا يصير بقعةً بيضاء. */
+  function paint(t){
+    build();
+    if (!MASK) return;
+    var n = N, c = ctx, cx = n*0.5, cy = n*0.52;
+    var pulse = still ? 0.92 : 0.86 + 0.14*Math.sin(t*0.00085);
+
+    c.setTransform(1,0,0,1,0,0);
+    c.globalCompositeOperation = 'source-over';
+    c.filter = 'none'; c.globalAlpha = 1;
+    c.clearRect(0, 0, n, n);
+
+    c.globalCompositeOperation = 'lighter';
+    var i, rr;
+    for (i = 0; i < 4; i++){
+      rr = n*(0.30 + i*0.085) + (still ? 0 : Math.sin(t*0.0005 + i)*n*0.005);
+      c.strokeStyle = 'rgba(255,255,255,' + (0.055 - i*0.009).toFixed(3) + ')';
+      c.lineWidth = n*0.035;
+      c.beginPath(); c.arc(cx, n*0.47, rr, 0, Math.PI*2); c.stroke();
+    }
+    c.filter = 'blur(' + (n*0.075) + 'px)'; c.globalAlpha = 0.34*pulse; c.drawImage(MASK, 0, 0);
+    c.filter = 'blur(' + (n*0.020) + 'px)'; c.globalAlpha = 0.26;       c.drawImage(MASK, 0, 0);
+    c.filter = 'blur(' + (n*0.006) + 'px)'; c.globalAlpha = 0.20;       c.drawImage(MASK, 0, 0);
+    c.filter = 'blur(' + (n*0.009) + 'px)'; c.globalAlpha = 0.95;       c.drawImage(WARM, 0, 0);
+
+    var core = c.createRadialGradient(cx, cy, 0, cx, cy, n*0.17*pulse);
+    core.addColorStop(0,    'rgba(255,255,255,0.92)');
+    core.addColorStop(0.22, 'rgba(255,255,255,0.42)');
+    core.addColorStop(1,    'rgba(255,255,255,0)');
+    c.filter = 'none'; c.globalAlpha = 1;
+    c.fillStyle = core; c.fillRect(0, 0, n, n);
+    c.globalCompositeOperation = 'source-over';
+  }
+
+  var raf = 0;
+  function loop(ms){ paint(ms); raf = requestAnimationFrame(loop); }
+  function start(){ if (!raf) raf = requestAnimationFrame(loop); }
+  function stop(){ if (raf){ cancelAnimationFrame(raf); raf = 0; } }
+  document.addEventListener('visibilitychange', function(){
+    if (document.hidden) stop(); else start();
+  });
+  window.addEventListener('resize', function(){ N = 0; paint(performance.now()); });
+
+  /* ══ اللغة: الزرُّ يحمل اللغةَ الأخرى — وعدٌ بما سيصير لا وصفٌ لما هو ══ */
+  var KEY = 'lobe-lang';
+  var AR = {
+    title:'لُب — LOBE', wm:'لُب', tag:'شركةٌ تقنيّة',
+    lede:'نُعيد الإنسانَ إلى لُبّه، إلى عقله. <em>ونُعيد صياغةَ علاقته بالتقنية ليصير منتجًا لا مستهلكًا.</em>',
+    lab:'المنصّات الثلاث', cr:'لُب', btn:'EN', aria:'English',
+    p:[['أكاديميا','منصّةُ العلم'],['أجندا','منصّةُ العمل'],['أثينا','منصّةُ القراءة']],
+    ix:['٠١','٠٢','٠٣']
+  };
+  var EN = {
+    title:'LOBE — لُب', wm:'LOBE', tag:'A TECHNOLOGY COMPANY',
+    lede:'We return people to their core — to their mind. <em>And reshape their relationship with technology, so they become producers, not consumers.</em>',
+    lab:'THE THREE PLATFORMS', cr:'LOBE', btn:'ع', aria:'العربيّة',
+    p:[['Academia','The platform for knowledge'],['Agenda','The platform for work'],['Athena','The platform for reading']],
+    ix:['01','02','03']
+  };
+  var btn = document.getElementById('lang');
+  function txt(id, v){ var e = document.getElementById(id); if (e) e.textContent = v; }
+
+  function set(lang, remember){
+    var isAr = lang !== 'en', L = isAr ? AR : EN, i, cards;
     document.documentElement.lang = isAr ? 'ar' : 'en';
     document.documentElement.dir  = isAr ? 'rtl' : 'ltr';
-    document.title = isAr ? 'لُب — LOBE' : 'LOBE — لُب';
-    show(ar,  isAr);
-    show(en, !isAr);
-    /* الزرُّ يحمل اللغةَ الأخرى: هو وعدٌ بما سيصير، لا وصفٌ لما هو */
-    btn.textContent = isAr ? 'EN' : 'ع';
-    btn.setAttribute('aria-label', isAr ? 'English' : 'العربيّة');
-    if (remember) { try { localStorage.setItem(KEY, isAr ? 'ar' : 'en'); } catch (e) {} }
+    document.title = L.title;
+    txt('wm', L.wm); txt('tag', L.tag); txt('lab', L.lab); txt('cr', L.cr);
+    document.getElementById('lede').innerHTML = L.lede;
+    for (i = 0; i < 3; i++){
+      txt('p' + (i+1) + 'n', L.p[i][0]);
+      txt('p' + (i+1) + 'd', L.p[i][1]);
+    }
+    cards = document.querySelectorAll('.card .ix');
+    for (i = 0; i < cards.length; i++) cards[i].textContent = L.ix[i];
+    btn.textContent = L.btn;
+    btn.setAttribute('aria-label', L.aria);
+    if (remember){ try { localStorage.setItem(KEY, isAr ? 'ar' : 'en'); } catch (e) {} }
   }
-
   var saved = null;
   try { saved = localStorage.getItem(KEY); } catch (e) {}
   set(saved === 'en' ? 'en' : 'ar', false);
-
-  btn.addEventListener('click', function () {
+  btn.addEventListener('click', function(){
     set(document.documentElement.lang === 'ar' ? 'en' : 'ar', true);
   });
 
-  /* لا يُكشف الشعارُ قبل وصول خطّه، وإلّا رُئي بخطّ النظام لحظةً.
+  /* لا تُكشف الصفحةُ قبل وصول خطّها، وإلّا رُئي الاسمُ بخطّ النظام لحظةً.
      والمهلةُ حارسٌ: إن تعذّر الخطُّ لم تبقَ الصفحةُ بيضاءَ أبدًا. */
-  function reveal() { document.body.classList.add('ready'); }
-  if (document.fonts && document.fonts.ready) {
+  function reveal(){ document.body.classList.add('ready'); paint(performance.now()); start(); }
+  if (document.fonts && document.fonts.ready){
     document.fonts.ready.then(reveal, reveal);
     setTimeout(reveal, 2500);
   } else { reveal(); }
