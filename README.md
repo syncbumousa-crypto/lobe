@@ -1,4 +1,8 @@
-# LOBE
+# LOBE — لُب
 
-The company mark, and nothing else.
-Arabic by default; the switch at the bottom turns it English.
+موقع الشركة: رئيسية وصفحات فرعية (عن الشركة، أكاديميا، أجندا، انضم إلينا، تواصل).
+عربي افتراضيًا، والزر في الترويسة يحوّله إنجليزي. كل الخطوط محلية، والموقع يعمل بلا إنترنت.
+
+- `assets/site.css` — الأنماط المشتركة
+- `assets/site.js` — الترويسة والذيل، اللغتان، الشعارات، التطويل المحسوب
+- `assets/plate.js` + `assets/mark-light.js` — ضوء القلب في الرئيسية
